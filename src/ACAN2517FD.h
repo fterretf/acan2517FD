@@ -14,6 +14,8 @@
 #include <CANMessage.h>
 #include <ACAN2517FDFilters.h>
 #include <SPI.h>
+#include "mux.h"
+#include "canCmn.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //   ACAN2517FD class
@@ -25,7 +27,8 @@ class ACAN2517FD {
 //   CONSTRUCTOR
 //······················································································································
 
-  public: ACAN2517FD (const uint8_t inCS, // CS input of MCP2517FD
+  public: ACAN2517FD (const CanCmn::eCanBusId busId,
+                      const uint8_t inCS, // CS input of MCP2517FD
                       SPIClass & inSPI, // Hardware SPI object
                       const uint8_t inINT) ; // INT output of MCP2517FD
 
@@ -134,6 +137,7 @@ class ACAN2517FD {
   #endif
   private: SPISettings mSPISettings ;
   private: SPIClass & mSPI ;
+  private: CanCmn::eCanBusId mBusId;
   private: const uint8_t mCS ;
   private: const uint8_t mINT ;
   private: bool mUsesTXQ ;
@@ -298,6 +302,42 @@ class ACAN2517FD {
     private: inline void deassertCS() {
       GPOS = cs_pin_mask;
     }
+
+  #elif defined(ARI_HW)
+    private: inline void initCS () {
+    }
+    private: inline void assertCS() {
+      switch (mBusId) {
+        case CanCmn::eCanBusId::eCan0:
+          digitalWrite(mCS, LOW);
+          break;
+        case CanCmn::eCanBusId::eCan1:
+          _Mux.can1Cs();
+          break;
+        case CanCmn::eCanBusId::eCan2:
+          _Mux.can2Cs();
+          break;
+    
+        default:
+          break;
+      }      
+    }   
+    private: inline void deassertCS() {
+      switch (mBusId) {
+        case CanCmn::eCanBusId::eCan0:
+          digitalWrite(mCS, HIGH);
+          break;
+        case CanCmn::eCanBusId::eCan1:
+          _Mux.can1UnCs();
+          break;
+        case CanCmn::eCanBusId::eCan2:
+          _Mux.can2UnCs();
+          break;
+        default:
+          break;
+      }
+}
+  
 
   #elif defined(__SAMD21G18A__)
     private: volatile uint32_t *cs_pin_reg;

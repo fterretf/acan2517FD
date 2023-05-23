@@ -171,11 +171,13 @@ static uint16_t u16FromBufferAtIndex (uint8_t ioBuffer [], const uint8_t inIndex
 
 //----------------------------------------------------------------------------------------------------------------------
 
-ACAN2517FD::ACAN2517FD (const uint8_t inCS, // CS input of MCP2517FD
+ACAN2517FD::ACAN2517FD (const CanCmn::eCanBusId busId,
+                        const uint8_t inCS, // CS input of MCP2517FD
                         SPIClass & inSPI, // Hardware SPI object
                         const uint8_t inINT) : // INT output of MCP2517FD
 mSPISettings (),
 mSPI (inSPI),
+mBusId(busId),
 mCS (inCS),
 mINT (inINT),
 mUsesTXQ (false),
@@ -315,6 +317,7 @@ uint32_t ACAN2517FD::begin (const ACAN2517FDSettings & inSettings,
     case ACAN2517FDSettings::OSC_4MHz:
     case ACAN2517FDSettings::OSC_20MHz:
     case ACAN2517FDSettings::OSC_40MHz:
+    case ACAN2517FDSettings::OSC_24MHz:
       break ;
     case ACAN2517FDSettings::OSC_4MHz_DIVIDED_BY_2:
     case ACAN2517FDSettings::OSC_20MHz_DIVIDED_BY_2:

@@ -35,6 +35,9 @@ uint32_t ACAN2517FDSettings::sysClock (const Oscillator inOscillator) {
   case OSC_4MHz10xPLL:
   case OSC_40MHz:
     break ;
+  case OSC_24MHz:
+    sysClock = 24UL * 1000 * 1000 ;
+    break ;
   }
   return sysClock ;
 }

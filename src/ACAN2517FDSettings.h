@@ -29,7 +29,8 @@ class ACAN2517FDSettings {
     OSC_20MHz,
     OSC_20MHz_DIVIDED_BY_2,
     OSC_40MHz,
-    OSC_40MHz_DIVIDED_BY_2
+    OSC_40MHz_DIVIDED_BY_2,
+    OSC_24MHz
   } Oscillator ;
 
   public: typedef enum : uint8_t {
