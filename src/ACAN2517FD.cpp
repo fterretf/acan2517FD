@@ -280,7 +280,7 @@ uint32_t ACAN2517FD::begin (const ACAN2517FDSettings & inSettings,
     }
     initCS () ;
   //----------------------------------- Set SPI clock to 1 MHz
-    mSPISettings = SPISettings (1000UL * 1000, MSBFIRST, SPI_MODE0) ;
+    mSPISettings = SPISettings (8000UL * 1000, MSBFIRST, SPI_MODE0) ;
   //----------------------------------- Request configuration mode
     bool wait = true ;
     const uint32_t startTime = millis () ;
