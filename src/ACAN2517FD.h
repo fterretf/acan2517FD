@@ -27,7 +27,7 @@ class ACAN2517FD {
 //   CONSTRUCTOR
 //······················································································································
 
-  public: ACAN2517FD (const CanCmn::eCanBusId busId,
+  public: ACAN2517FD (const CanCmn::eCanBusFdId busId,
                       const uint8_t inCS, // CS input of MCP2517FD
                       SPIClass & inSPI, // Hardware SPI object
                       const uint8_t inINT) ; // INT output of MCP2517FD
@@ -137,7 +137,7 @@ class ACAN2517FD {
   #endif
   private: SPISettings mSPISettings ;
   private: SPIClass & mSPI ;
-  private: CanCmn::eCanBusId mBusId;
+  private: CanCmn::eCanBusFdId mBusId;
   private: const uint8_t mCS ;
   private: const uint8_t mINT ;
   private: bool mUsesTXQ ;
@@ -173,6 +173,11 @@ class ACAN2517FD {
   public: uint32_t driverTransmitBufferCount (void) const { return mDriverTransmitBuffer.count () ; }
 
   public: uint32_t driverTransmitBufferPeakCount (void) const { return mDriverTransmitBuffer.peakCount () ; }
+// Gpio
+  public:
+    void ledRedToggle();
+    void ledRedOn();
+    void ledRedOff();
 
 //······················································································································
 //    Private methods
@@ -308,13 +313,7 @@ class ACAN2517FD {
     }
     private: inline void assertCS() {
       switch (mBusId) {
-        case CanCmn::eCanBusId::eCan0:
-          digitalWrite(mCS, LOW);
-          break;
-        case CanCmn::eCanBusId::eCan1:
-          _Mux.can1Cs();
-          break;
-        case CanCmn::eCanBusId::eCan2:
+        case CanCmn::eCanBusFdId::eCanFd2:
           _Mux.can2Cs();
           break;
     
@@ -324,13 +323,7 @@ class ACAN2517FD {
     }   
     private: inline void deassertCS() {
       switch (mBusId) {
-        case CanCmn::eCanBusId::eCan0:
-          digitalWrite(mCS, HIGH);
-          break;
-        case CanCmn::eCanBusId::eCan1:
-          _Mux.can1UnCs();
-          break;
-        case CanCmn::eCanBusId::eCan2:
+        case CanCmn::eCanBusFdId::eCanFd2:
           _Mux.can2UnCs();
           break;
         default:

@@ -171,7 +171,7 @@ static uint16_t u16FromBufferAtIndex (uint8_t ioBuffer [], const uint8_t inIndex
 
 //----------------------------------------------------------------------------------------------------------------------
 
-ACAN2517FD::ACAN2517FD (const CanCmn::eCanBusId busId,
+ACAN2517FD::ACAN2517FD (const CanCmn::eCanBusFdId busId,
                         const uint8_t inCS, // CS input of MCP2517FD
                         SPIClass & inSPI, // Hardware SPI object
                         const uint8_t inINT) : // INT output of MCP2517FD
@@ -351,7 +351,7 @@ uint32_t ACAN2517FD::begin (const ACAN2517FDSettings & inSettings,
     }
   }
 //----------------------------------- Set full speed clock
-  mSPISettings = SPISettings (inSettings.sysClock () / 2, MSBFIRST, SPI_MODE0) ;
+  mSPISettings = SPISettings (8000UL*1000, MSBFIRST, SPI_MODE0) ; 
 //----------------------------------- Checking SPI connection is on (with a full speed clock)
 //    We write and read back 2517 RAM at address 0x400
   for (uint32_t i=1 ; (i != 0) && (errorCode == 0) ; i <<= 1) {
@@ -1260,3 +1260,18 @@ uint32_t ACAN2517FD::diagInfos (const int inIndex) { // thanks to Flole998 and t
 }
 
 //----------------------------------------------------------------------------------------------------------------------
+//Gpio
+    void ACAN2517FD::ledRedToggle() { //rxobfOn; avaible on CAN1,2
+      if (readRegister8(IOCON_REGISTER) & 0x01) {
+        ledRedOn();
+      }
+      else{
+        ledRedOff();
+      }
+    }
+  void ACAN2517FD::ledRedOn() {
+    writeRegister8 (IOCON_REGISTER, 0) ; // write 1 to gpio0
+  }
+  void ACAN2517FD::ledRedOff() {
+    writeRegister8 (IOCON_REGISTER, 1) ; // write 0 to gpio0
+  }
