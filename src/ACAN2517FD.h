@@ -316,7 +316,9 @@ class ACAN2517FD {
         case CanCmn::eCanBusFdId::eCanFd2:
           _Mux.can2Cs();
           break;
-    
+        case CanCmn::eCanBusFdId::eCanFdMCP2518Fd_CLICK:
+          digitalWrite(mCS, LOW);
+          break;          
         default:
           break;
       }      
@@ -326,6 +328,9 @@ class ACAN2517FD {
         case CanCmn::eCanBusFdId::eCanFd2:
           _Mux.can2UnCs();
           break;
+        case CanCmn::eCanBusFdId::eCanFdMCP2518Fd_CLICK:
+          digitalWrite(mCS, HIGH);
+          break;            
         default:
           break;
       }
